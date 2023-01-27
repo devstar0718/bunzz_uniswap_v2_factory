@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.16;
 
 import "./interfaces/IUniswapV2Pair.sol";
@@ -162,7 +163,7 @@ contract UniswapV2Pair is IUniswapV2Pair {
         _approve(owner, spender, value);
     }
 
-    constructor() public {
+    constructor() {
         factory = msg.sender;
     }
 
