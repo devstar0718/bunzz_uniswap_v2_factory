@@ -84,7 +84,7 @@ contract UniswapV2Pair is IUniswapV2Pair {
 
     function _burn(address from, uint256 value) internal {
         balanceOf[from] -= value;
-        totalSupply += value;
+        totalSupply -= value;
         emit Transfer(from, address(0), value);
     }
 
