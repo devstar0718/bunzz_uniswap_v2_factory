@@ -80,18 +80,142 @@ Returns the address of the nth pair (0-indexed) created through the factory, or 
 
 - Pass 0 for the address of the first pair created, 1 for the second, etc.
 
-## Local Development
+# Uniswap V2 Pair
+
+## Events
+
+`Mint`
+
+Emitted each time liquidity tokens are created via mint
+
+- Params
+
+| name    | type    | description                |
+| :------ | :------ | :------------------------- |
+| sender  | address | The address of mint client |
+| amount0 | uint    | The amount of token0       |
+| amount1 | uint    | The amount of token1       |
+
+`Burn`
+
+Emitted each time liquidity tokens are destroyed via burn
+
+- Params
+
+| name    | type    | description                |
+| :------ | :------ | :------------------------- |
+| sender  | address | The address of mint client |
+| amount0 | uint    | The amount of token0       |
+| amount1 | uint    | The amount of token1       |
+| to      | address | The destination address    |
+
+`Swap`
+
+Emitted each time liquidity tokens are destroyed via burn
+
+- Params
+
+| name       | type    | description                 |
+| :--------- | :------ | :-------------------------- |
+| sender     | address | The address of mint client  |
+| amount0In  | uint    | The input amount of token0  |
+| amount1In  | uint    | The input amount of token1  |
+| amount0Out | uint    | The output amount of token0 |
+| amount1Out | uint    | The output amount of token1 |
+| to         | address | The destination address     |
+
+`Sync`
+
+Emitted each time reserves are updated via `mint`, `burn`, `swap`, or `sync`
+
+- Params
+
+| name     | type    | description                  |
+| :------- | :------ | :--------------------------- |
+| reserve0 | uint112 | The token0 amount to reserve |
+| reserve1 | uint112 | The token1 amount to reserve |
+
+## Read Functions
+
+`MINIMUM_LIQUIDITY`
+
+Returns 1000 for all pairs. See Minimum Liquidity.
+
+`factory`
+
+Returns the factory address.
+
+`token0`
+
+Returns the address of the pair token with the lower sort order.
+
+`token1`
+
+Returns the address of the pair token with the higher sort order.
+
+`getReserves`
+
+Returns the reserves of token0 and token1 used to price trades and distribute liquidity. Also returns the block.timestamp (mod 2\*\*32) of the last block during which an interaction occured for the pair.
+
+`price0CumulativeLast`
+
+`price1CumulativeLast`
+
+`kLast`
+
+Returns the product of the reserves as of the most recent liquidity event.
+
+## Write Functions
+
+`mint`
+
+Creates pool tokens.
+
+- Emits `Mint`, `Sync`, `Transfer`
+
+| name    | type | description    |
+| :------ | :--- | :------------- |
+| address | to   | minted address |
+
+`swap`
+
+Swaps tokens. For regular swaps, data.length must be 0.
+
+- Emits `Swap`, `Sync`
+
+| name    | type       | description              |
+| :------ | :--------- | :----------------------- |
+| uint    | amount0Out | The output token0 amount |
+| uint    | amount1Out | The output token1 amount |
+| address | to         | Destination address      |
+| bytes   | data       | bytes data               |
+
+`skim`
+
+Functions as a recovery mechanism in case enough tokens are sent to an pair to
+overflow the two uint112 storage slots for reserves, which could otherwise cause trades to fail.
+
+| name    | type | description |
+| :------ | :--- | :---------- |
+| address | to   | To address  |
+
+`sync`
+
+Functions as a recovery mechanism in the case that a token asynchronously
+deflates the balance of a pair. In this case, trades will receive sub-optimal rates, and if no liquidity provider is willing to rectify the situation, the pair is stuck.
+
+# Local Development
 
 The following assumes the use of `node@>=10`.
 
-### Install Dependencies
+## Install Dependencies
 
 `yarn`
 
-### Compile Contracts
+## Compile Contracts
 
 `yarn compile`
 
-### Run Tests
+## Run Tests
 
 `yarn test`
