@@ -23,7 +23,7 @@ Emitted each time a pair is created via [createPair](#write).
 
 ## Functions
 
-### WRITE
+### WRITE Functions
 
 `createPair`
 
@@ -60,7 +60,7 @@ Set a new setter address by **older setter**.
   | :------------ | :------ | :-------------------------- |
   | \_feeToSetter | address | The address of a new setter |
 
-## Read
+### Read Functions
 
 `feeTo`
 
@@ -135,7 +135,9 @@ Emitted each time reserves are updated via `mint`, `burn`, `swap`, or `sync`
 | reserve0 | uint112 | The token0 amount to reserve |
 | reserve1 | uint112 | The token1 amount to reserve |
 
-## Read Functions
+## Functions
+
+### Read Functions
 
 `MINIMUM_LIQUIDITY`
 
@@ -165,7 +167,7 @@ Returns the reserves of token0 and token1 used to price trades and distribute li
 
 Returns the product of the reserves as of the most recent liquidity event.
 
-## Write Functions
+### Write Functions
 
 `mint`
 
