@@ -4,6 +4,12 @@
 
 Uniswap Factory allows you to create uniswap liquidity pair contracts and you can fetch the pair address of any ERC20 token that has an active pair.
 
+## How to use
+
+- The factory holds the generic bytecode responsible for powering pairs. Its primary job is to create one and only one smart contract per unique token pair. It also contains logic to turn on the protocol charge.
+
+- Pairs have two primary purposes: serving as automated market makers and keeping track of pool token balances. They also expose data which can be used to build decentralized price oracles.
+
 ## Events
 
 `PairCreated`
