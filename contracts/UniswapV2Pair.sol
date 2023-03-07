@@ -93,6 +93,20 @@ contract UniswapV2Pair is IUniswapV2Pair {
 
     constructor() {
         factory = msg.sender;
+
+        uint chainId;
+        assembly {
+            chainId := chainid()
+        }
+        DOMAIN_SEPARATOR = keccak256(
+            abi.encode(
+                keccak256('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)'),
+                keccak256(bytes(name)),
+                keccak256(bytes('1')),
+                chainId,
+                address(this)
+            )
+        );
     }
 
     /**
@@ -153,21 +167,6 @@ contract UniswapV2Pair is IUniswapV2Pair {
         address recoveredAddress = ecrecover(digest, v, r, s);
         require(recoveredAddress != address(0) && recoveredAddress == owner, 'UniswapV2: INVALID_SIGNATURE');
         _approve(owner, spender, value);
-    }
-
-    /// @inheritdoc IUniswapV2Pair
-    function getReserves()
-        public
-        view
-        returns (
-            uint112 _reserve0,
-            uint112 _reserve1,
-            uint32 _blockTimestampLast
-        )
-    {
-        _reserve0 = reserve0;
-        _reserve1 = reserve1;
-        _blockTimestampLast = blockTimestampLast;
     }
 
     /**
@@ -285,6 +284,41 @@ contract UniswapV2Pair is IUniswapV2Pair {
         _update(IERC20(token0).balanceOf(address(this)), IERC20(token1).balanceOf(address(this)), reserve0, reserve1);
     }
 
+     /// @inheritdoc IUniswapV2Pair
+    function getReserves()
+        public
+        view
+        returns (
+            uint112 _reserve0,
+            uint112 _reserve1,
+            uint32 _blockTimestampLast
+        )
+    {
+        _reserve0 = reserve0;
+        _reserve1 = reserve1;
+        _blockTimestampLast = blockTimestampLast;
+    }
+
+     /**
+     * @param to destination address
+     * @param value mint amount
+     **/
+    function _mint(address to, uint256 value) internal {
+        totalSupply += value;
+        balanceOf[to] += value;
+        emit Transfer(address(0), to, value);
+    }
+
+    /**
+     * @param from address of from
+     * @param value burn amount
+     **/
+    function _burn(address from, uint256 value) internal {
+        balanceOf[from] -= value;
+        totalSupply -= value;
+        emit Transfer(from, address(0), value);
+    }
+
     /**
      * @param token address of token
      * @param to destination address
@@ -379,25 +413,5 @@ contract UniswapV2Pair is IUniswapV2Pair {
         } else if (_kLast != 0) {
             kLast = 0;
         }
-    }
-
-    /**
-     * @param to destination address
-     * @param value mint amount
-     **/
-    function _mint(address to, uint256 value) internal {
-        totalSupply += value;
-        balanceOf[to] += value;
-        emit Transfer(address(0), to, value);
-    }
-
-    /**
-     * @param from address of from
-     * @param value burn amount
-     **/
-    function _burn(address from, uint256 value) internal {
-        balanceOf[from] -= value;
-        totalSupply -= value;
-        emit Transfer(from, address(0), value);
     }
 }
